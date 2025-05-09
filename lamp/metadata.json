@@ -1,19 +1,19 @@
 {
-  "name": "lamp",
+  "name": "lemonldapng",
   "description": {
-    "en": "LAMP provides a comprehensive and open-source platform for developing, deploying, and managing dynamic PHP web applications and websites"
+    "en": "LemonLDAP-NG is a SSO Server"
   },
   "categories": [],
   "authors": [
     {
-      "name": "Stephane de Labrusse",
-      "email": "stephdl@de-labrusse.fr"
+      "name": "KSAT Design",
+      "email": "support@ksatdesign.com.au"
     }
   ],
   "docs": {
-    "documentation_url": "https://github.com/stephdl/ns8-lamp",
-    "bug_url": "https://github.com/stephdl/dev",
-    "code_url": "https://github.com/stephdl/ns8-lamp"
+    "documentation_url": "https://github.com/ksat-design/ns8-lemonldapng",
+    "bug_url": "https://github.com/ksat-design/dev",
+    "code_url": "https://github.com/ksat-design/ns8-lemonldapng"
   },
-  "source": "ghcr.io/stephdl/lamp"
+  "source": "ghcr.io/ksat-design/lemonldapng"
 }
