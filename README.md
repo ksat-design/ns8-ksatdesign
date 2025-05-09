@@ -10,5 +10,9 @@ To use the modules listed here as NS8 repository, see the [manual
 page](https://docs.nethserver.org/projects/ns8/en/latest/modules.html#software-repositories)
 and set the following URL:
 
+    https://forge.ksatdesign.com.au/ns8/updates/
+
+Alternative URL:
+
     https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/repomd/ns8/updates/
 
