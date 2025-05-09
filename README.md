@@ -2,7 +2,7 @@
 
 This is the official KSAT Design NS8 repository of modules.
 
-Metadata are built every 4 hours at 00:25, 06:25 ,12:25, 18:25 UTC and on each commit to the `main` branch.
+Metadata are built every 4 hours at 00:24, 06:25 ,12:25, 18:25 UTC and on each commit to the `main` branch.
 
 You can see all available versions [here](https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/repomd/ns8/updates/repodata.json)
 
