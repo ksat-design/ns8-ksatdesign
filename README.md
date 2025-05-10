@@ -1,18 +1,19 @@
-# The ksatdesign forge modules for NS8
+<p align="center"><img src="logo.png" alt="KSAT Design logo" width="160"/></p>
 
-This is the official KSAT Design NS8 repository of modules.
+# The KSAT Design Forge for NS8
 
-Metadata are built every 4 hours at 00:24, 06:25 ,12:25, 18:25 UTC and on each commit to the `main` branch.
+*The official KSAT Design repository of NS8 modules, tools, and open-source identity solutions.*
 
-You can see all available versions [here](https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/repomd/ns8/updates/repodata.json)
+🕒 Metadata is rebuilt every 6 hours at 00:25, 06:25, 12:25, 18:25 UTC and on each commit to `main`.
 
-To use the modules listed here as NS8 repository, see the [manual
-page](https://docs.nethserver.org/projects/ns8/en/latest/modules.html#software-repositories)
-and set the following URL:
+📦 [View all available versions](https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/repomd/ns8/updates/repodata.json)
+
+📘 To use this as an NS8 repository, set the following URL:
 
     https://forge.ksatdesign.com.au/ns8/updates/
 
-Alternative URL:
+
+🔁 Alternative URL:
 
     https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/repomd/ns8/updates/
 
