@@ -97,7 +97,36 @@ with open(os.path.join(path, 'repodata.json'), 'w') as outfile:
 # Optionally update README.md with a logo table
 with open('repodata.json') as json_file:
     data = json.load(json_file)
-    with open('README.md', 'a') as f:
+    with open('README.md', 'r') as f:
+    original_readme = f.read()
+
+# Insert the build timestamp right after the logo block
+timestamp_line = f'\n<p align="center"><em>Last metadata update: {data["build_timestamp"]}</em></p>\n'
+
+# Locate where to insert: after the logo image line
+logo_tag = '<p align="center"><img src="logo.png" alt="KSAT Design logo" width="160"/></p>'
+if logo_tag in original_readme:
+    parts = original_readme.split(logo_tag)
+    updated_readme = parts[0] + logo_tag + timestamp_line + parts[1]
+else:
+    updated_readme = original_readme  # fallback to unchanged if pattern not found
+
+# Append the existing table info and tracker
+with open('README.md', 'w') as f:
+    f.write(updated_readme)
+    f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
+    f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
+    f.write('## 📚 Available Modules\n\n')
+    f.write('| Module Name | Description | Code |\n')
+    f.write('|-------------|-------------|----------------|\n')
+    for module in data["modules"]:
+        name = module["name"]
+        description = module["description"]["en"]
+        code_url = module["docs"]["code_url"]
+        logo = module.get("logo", "")
+        name_column = f'<img src="{logo}" width="80"><br>{name}' if logo else name
+        f.write(f'| {name_column} | {description} | [Code]({code_url}) |\n')
+    f.write(f'\n_Last updated: {data["build_timestamp"]}_\n')
         f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
         f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
         f.write('## 📚 Available Modules\n\n')
