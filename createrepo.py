@@ -65,21 +65,26 @@ for entry_path in glob.glob(path + '/*'):
                     f"https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/main/{entry_name}/screenshots/{file}"
                 )
 
-    print("Inspect " + metadata["source"])
+    print("Inspecting image:", metadata["source"])
     try:
-        with subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as proc:
+        with subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}'],
+                              stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as proc:
             info = json.load(proc.stdout)
             metadata["versions"] = []
             versions = []
+
             for tag in info.get("RepoTags", []):
                 try:
-                    versions.append(semver.VersionInfo.parse(tag))
-                    p = subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}:{tag}"],
+                    parsed_version = semver.VersionInfo.parse(tag)
+                    versions.append(parsed_version)
+
+                    image_ref = f'docker://{metadata["source"]}:{tag}'
+                    p = subprocess.Popen(["skopeo", "inspect", image_ref],
                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
                     info_tags = json.load(p.stdout)
                     version_labels[tag] = info_tags.get("Labels", {})
                 except Exception:
-                    pass
+                    continue
 
             for v in sorted(versions, reverse=True):
                 metadata["versions"].append({
@@ -87,8 +92,9 @@ for entry_path in glob.glob(path + '/*'):
                     "testing": v.prerelease is not None,
                     "labels": version_labels.get(str(v), {})
                 })
+
     except Exception as e:
-        print(f"Failed to inspect {metadata['source']}: {e}")
+        print(f"Failed to inspect {metadata['source']}: {e}", file=sys.stderr)
 
     index.append(metadata)
 
