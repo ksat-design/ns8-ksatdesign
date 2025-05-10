@@ -1,7 +1,10 @@
 {
   "name": "LemonLDAP::NG",
   "description": {
-    "en": "LemonLDAP::NG is an open-source Single Sign-On (SSO) and access management platform. It supports SAML, OpenID Connect, CAS, LDAP, and more. With a web UI, CLI, and REST API, it centralizes authentication and access control.\n\n👉 [Full feature list and usage guide](https://github.com/ksat-design/ns8-lemonldapng#readme)"
+    "en": "LemonLDAP::NG is an open-source Single Sign-On (SSO) and access management platform. It supports SAML, OpenID Connect, CAS, LDAP, and more. With a web UI, CLI, and REST API, it centralizes authentication and access control.
+  <br><br>
+  👉 Full feature list and usage guide: 
+  <a href="https://github.com/ksat-design/ns8-lemonldapng#readme" target="_blank" rel="noopener noreferrer">Link</a>"
   },
   "category": [Security],
   "authors": [
