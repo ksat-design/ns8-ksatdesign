@@ -1,4 +1,4 @@
-<p align="center"><img src="logo.png" alt="KSAT Design logo" width="160"/></p>
+<p align="center"><img src="https://github.com/ksat-design/ns8-ksatdesign/blob/dbad3ca202283ab743e0f86214b695d042c98cb3/logo.png" alt="KSAT Design logo" width="160"/></p>
 
 # The KSAT Design Forge for NS8
 
