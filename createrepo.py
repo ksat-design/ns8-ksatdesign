@@ -10,6 +10,7 @@ import json
 import semver
 import subprocess
 import glob
+import urllib.parse
 from datetime import datetime
 
 path = '.'
@@ -111,24 +112,37 @@ with open(os.path.join(path, 'repodata.json'), 'w') as outfile:
 
 print("Metadata written. Last updated at:", timestamp)
 
-# Optional: Update README.md or index.md
-with open('repodata.json') as json_file:
-    repodata = json.load(json_file)
-    timestamp = repodata.get("timestamp", "unknown")
-    data = repodata.get("modules", [])
+# Generate index.md with branding and cards
+with open('index.md', 'w') as f:
+    f.write(f"<p align=\"center\"><img src=\"https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/main/logo.png\" width=\"160\" /></p>\n\n")
+    f.write("# The KSAT Design Forge for NS8\n\n")
+    f.write("*Official KSAT Design repository of NS8 modules, tools, and open-source identity solutions.*\n\n")
+    f.write(f"_Last updated: **{timestamp}**_\n\n")
 
-    with open('README.md', 'w') as f:
-        f.write(f"_Last updated: **{timestamp}**_\n\n")
-        f.write('## 🐞 KSAT Design Bug Tracker\n\n')
-        f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
-        f.write('## 📚 Available Modules\n\n')
-        f.write('| Module Name | Description | Code |\n')
-        f.write('|-------------|-------------|----------------|\n')
-        for module in data:
-            name = module["name"]
-            description = module["description"]["en"]
-            code_url = module["docs"]["code_url"]
-            logo = module.get("logo", "")
-            name_column = f'<img src="{logo}" width="80"><br>{name}' if logo else name
-            f.write(f'| {name_column} | {description} | [Code]({code_url}) |\n')
-        f.write('\n')
+    f.write("## 📚 Available Modules\n\n")
+
+    for module in metadata_output["modules"]:
+        name = module["name"]
+        module_id = module.get("id", name.lower().replace(" ", "-"))
+        description = module["description"]["en"]
+        code_url = module["docs"]["code_url"]
+        logo = module.get("logo", "")
+        screenshots = module.get("screenshots", [])
+
+        issue_title = f"[Bug] {name}"
+        issue_body = f"**Module**: `{module_id}`\n**Version**: `x.y.z`\n**Issue**: Describe the problem..."
+        issue_url = "https://github.com/ksat-design/support/issues/new?" + urllib.parse.urlencode({
+            "title": issue_title,
+            "body": issue_body
+        })
+
+        f.write(f"### {name}\n")
+        if logo:
+            f.write(f'<img src="{logo}" alt="{name} logo" width="120"/>\n\n')
+        f.write(f"**Description:** {description}  \n")
+        f.write(f"[Source Code]({code_url}) | [Report Issue]({issue_url})\n\n")
+
+        for shot in screenshots:
+            f.write(f'<img src="{shot}" width="300"/>  \n')
+
+        f.write("\n---\n\n")
