@@ -136,5 +136,4 @@ with open('repodata.json') as json_file:
             f.write(f'| {name_column} | {description} | [Code]({code_url}) |\n')
 
         f.write('\n\n')
-
         f.close()
