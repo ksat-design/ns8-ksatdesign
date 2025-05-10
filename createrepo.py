@@ -10,6 +10,7 @@ import json
 import semver
 import subprocess
 import glob
+from datetime import datetime
 
 path = '.'
 index = []
@@ -73,7 +74,7 @@ for entry_path in glob.glob(path + '/*'):
             for tag in info.get("RepoTags", []):
                 try:
                     versions.append(semver.VersionInfo.parse(tag))
-                    p = subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}:{tag}'],
+                    p = subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}:{tag}"],
                                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
                     info_tags = json.load(p.stdout)
                     version_labels[tag] = info_tags.get("Labels", {})
@@ -91,15 +92,28 @@ for entry_path in glob.glob(path + '/*'):
 
     index.append(metadata)
 
-# Write repodata.json
-with open(os.path.join(path, 'repodata.json'), 'w') as outfile:
-    json.dump(index, outfile, separators=(',', ':'))
+# Add UTC timestamp to metadata
+timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+metadata_output = {
+    "timestamp": timestamp,
+    "modules": index
+}
 
-# Optionally update README.md with a logo table
+# Write repodata.json with timestamp
+with open(os.path.join(path, 'repodata.json'), 'w') as outfile:
+    json.dump(metadata_output, outfile, separators=(',', ':'))
+
+print("Metadata written. Last updated at:", timestamp)
+
+# Optional: Update README.md or index.md
 with open('repodata.json') as json_file:
-    data = json.load(json_file)
-    with open('README.md', 'a') as f:
-        f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
+    repodata = json.load(json_file)
+    timestamp = repodata.get("timestamp", "unknown")
+    data = repodata.get("modules", [])
+
+    with open('README.md', 'w') as f:
+        f.write(f"_Last updated: **{timestamp}**_\n\n")
+        f.write('## 🐞 KSAT Design Bug Tracker\n\n')
         f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
         f.write('## 📚 Available Modules\n\n')
         f.write('| Module Name | Description | Code |\n')
