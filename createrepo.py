@@ -7,7 +7,6 @@ import os
 import sys
 import copy
 import json
-import imghdr
 import semver
 import subprocess
 import glob
@@ -54,63 +53,62 @@ for entry_path in glob.glob(path + '/*'):
         print(f"Module {entry_name} was ignored:", ex, file=sys.stderr)
         continue
 
-    logo = os.path.join(entry_path, "logo.png")
-    if os.path.isfile(logo) and imghdr.what(logo) == "png":
-        metadata["logo"] = "logo.png"
+    # Use GitHub raw URLs for logo and screenshots from the main branch
+    metadata["logo"] = f"https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/main/{entry_name}/logo.png"
 
-    screenshot_dirs = os.path.join(entry_path, "screenshots")
-    if os.path.isdir(screenshot_dirs):
-        with os.scandir(screenshot_dirs) as sdir:
-            for screenshot in sdir:
-                if imghdr.what(screenshot) == "png":
-                    metadata["screenshots"].append(os.path.join("screenshots", screenshot.name))
+    screenshot_dir = os.path.join(entry_path, "screenshots")
+    if os.path.isdir(screenshot_dir):
+        for file in os.listdir(screenshot_dir):
+            if file.lower().endswith(".png"):
+                metadata["screenshots"].append(
+                    f"https://raw.githubusercontent.com/ksat-design/ns8-ksatdesign/main/{entry_name}/screenshots/{file}"
+                )
 
     print("Inspect " + metadata["source"])
-    with subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}'], stdout=subprocess.PIPE, stderr=sys.stderr) as proc:
-        info = json.load(proc.stdout)
-        metadata["versions"] = []
-        versions = []
-        for tag in info.get("RepoTags", []):
-            try:
-                versions.append(semver.VersionInfo.parse(tag))
-                p = subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}:{tag}'], stdout=subprocess.PIPE, stderr=sys.stderr)
-                info_tags = json.load(p.stdout)
-                version_labels[tag] = info_tags.get("Labels", {})
-            except:
-                pass
+    try:
+        with subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as proc:
+            info = json.load(proc.stdout)
+            metadata["versions"] = []
+            versions = []
+            for tag in info.get("RepoTags", []):
+                try:
+                    versions.append(semver.VersionInfo.parse(tag))
+                    p = subprocess.Popen(["skopeo", "inspect", f'docker://{metadata["source"]}:{tag}'],
+                                         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                    info_tags = json.load(p.stdout)
+                    version_labels[tag] = info_tags.get("Labels", {})
+                except Exception:
+                    pass
 
-        for v in sorted(versions, reverse=True):
-            metadata["versions"].append({
-                "tag": str(v),
-                "testing": v.prerelease is not None,
-                "labels": version_labels.get(str(v), {})
-            })
+            for v in sorted(versions, reverse=True):
+                metadata["versions"].append({
+                    "tag": str(v),
+                    "testing": v.prerelease is not None,
+                    "labels": version_labels.get(str(v), {})
+                })
+    except Exception as e:
+        print(f"Failed to inspect {metadata['source']}: {e}")
 
     index.append(metadata)
 
-# Write repodata
+# Write repodata.json
 with open(os.path.join(path, 'repodata.json'), 'w') as outfile:
     json.dump(index, outfile, separators=(',', ':'))
 
-# Generate README
+# Optionally update README.md with a logo table
 with open('repodata.json') as json_file:
     data = json.load(json_file)
     with open('README.md', 'a') as f:
         f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
         f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
-
         f.write('## 📚 Available Modules\n\n')
         f.write('| Module Name | Description | Code |\n')
         f.write('|-------------|-------------|----------------|\n')
-
         for module in data:
             name = module["name"]
             description = module["description"]["en"]
             code_url = module["docs"]["code_url"]
             logo = module.get("logo", "")
-            if logo:
-                logo = f'{module["id"]}/{logo}'  # Ensure correct relative path
             name_column = f'<img src="{logo}" width="80"><br>{name}' if logo else name
             f.write(f'| {name_column} | {description} | [Code]({code_url}) |\n')
-
-        f.write('\n\n')
+        f.write('\n')
