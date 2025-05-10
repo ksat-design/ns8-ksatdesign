@@ -16,4 +16,5 @@
     "code_url": "https://github.com/ksat-design/ns8-lemonldapng"
   },
   "source": "ghcr.io/ksat-design/lemonldapng"
+  "logo": "logo.png"
 }
