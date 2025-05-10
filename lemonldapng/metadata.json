@@ -1,7 +1,7 @@
 {
-  "name": "lemonldapng",
+  "name": "LemonLDAP::NG",
   "description": {
-    "en": "LemonLDAP-NG is an open-source Single Sign-On (SSO) and access management platform. It supports protocols like SAML, OpenID Connect, CAS, and LDAP. With a web-based UI and CLI/API, it enables centralized authentication, policy-driven access control, and branding customization."
+    "en": "LemonLDAP::NG is an open-source Single Sign-On (SSO) and access management platform. It supports protocols like SAML, OpenID Connect, CAS, and LDAP. With a web-based UI and CLI/API, it enables centralized authentication, policy-driven access control, and branding customization."
   },
   "categories": [],
   "authors": [
