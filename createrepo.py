@@ -121,11 +121,11 @@ with open('repodata.json') as json_file:
     data = json.load(json_file)
     with open('README.md', 'a') as f:
         # Add project bug tracker link
-        f.write('\n\n## KSAT Design bug tracker\n\n')
+        f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
         f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')  # Replace with the actual project link
 
         # Add table header
-        f.write('## List of all the modules in this repository with their description\n\n')
+        f.write('## 📚 Available Modules\n\n')
         f.write('| Module Name | Description | Code |\n')
         f.write('|-------------|-------------|----------------|\n')
 
