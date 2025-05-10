@@ -120,21 +120,21 @@ with open (os.path.join(path, 'repodata.json'), 'w') as outfile:
 with open('repodata.json') as json_file:
     data = json.load(json_file)
     with open('README.md', 'a') as f:
-        # Add project bug tracker link
         f.write('\n\n## 🐞 KSAT Design Bug Tracker\n\n')
-        f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')  # Replace with the actual project link
+        f.write('[Raise a bug](https://github.com/ksat-design/dev/issues)\n\n')
 
-        # Add table header
         f.write('## 📚 Available Modules\n\n')
         f.write('| Module Name | Description | Code |\n')
         f.write('|-------------|-------------|----------------|\n')
 
-        # Add table rows
         for module in data:
             name = module["name"]
             description = module["description"]["en"]
             code_url = module["docs"]["code_url"]
-            f.write(f'| {name} | {description} | [Code]({code_url}) |\n')
+            logo_url = module.get("logo", "")
+            name_column = f'<img src="{logo_url}" width="80"><br>{name}' if logo_url else name
+            f.write(f'| {name_column} | {description} | [Code]({code_url}) |\n')
 
         f.write('\n\n')
+
         f.close()
